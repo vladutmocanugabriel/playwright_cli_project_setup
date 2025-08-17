@@ -4,12 +4,12 @@ A Python CLI tool that quickly scaffolds a complete Playwright test automation p
 
 ## Features
 
-- 🚀 **Quick Setup**: Creates a full Playwright project in seconds
-- 📁 **Organized Structure**: Separates E2E, frontend, backend tests with POM pattern
-- 🎭 **Multi-browser**: Pre-configured for Chromium, Firefox, and WebKit
-- 📊 **Test Data**: Faker.js integration for dynamic test data
-- 🔧 **TypeScript**: Full TypeScript support with proper configuration
-- 🏗️ **Best Practices**: Includes fixtures, utilities, and Page Object Models
+- **Quick Setup**: Creates a full Playwright project in seconds
+- **Organized Structure**: Separates E2E, frontend, backend tests with POM pattern
+- **Multi-browser**: Pre-configured for Chromium, Firefox, and WebKit
+- **Test Data**: Faker.js integration for dynamic test data
+- **TypeScript**: Full TypeScript support with proper configuration
+- **Best Practices**: Includes fixtures, utilities, and Page Object Models
 
 ## Prerequisites
 
@@ -126,37 +126,24 @@ npx playwright show-report
 
 ## Key Features of Generated Projects
 
-### 🎯 Test ID Strategy
+### Test ID Strategy
 - Uses `data-e2e` attributes for reliable element selection
 - Pre-configured in Playwright config
 
-### 🏗️ Page Object Model Pattern
+### Page Object Model Pattern
 - Clear separation of locators and actions
 - Organized by features for scalability
 
-### 📊 Dynamic Test Data
+### Dynamic Test Data
 - Faker.js integration for realistic test data
 - Predefined user roles and data structures
 
-### 🔐 Authentication Support
+### Authentication Support
 - Fixtures for handling auth tokens
 - Environment variable support
 
-### 🌐 Multi-browser Testing
+### Multi-browser Testing
 - Parallel execution across browsers
-- CI/CD ready configuration
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test with different project setups
-5. Submit a pull request
-
-## License
-
-MIT License - feel free to use and modify for your projects!
 
 ---
 
