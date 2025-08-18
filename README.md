@@ -37,9 +37,9 @@ python main.py my-test-project --force --dry-run
 
 ```bash
 # Download the files
-curl -O https://raw.githubusercontent.com/your-username/qa_automation_project_setup/main/main.py
-curl -O https://raw.githubusercontent.com/your-username/qa_automation_project_setup/main/project_setup_helpers.py
-curl -O https://raw.githubusercontent.com/your-username/qa_automation_project_setup/main/files_setup_helpers.py
+curl -O https://raw.githubusercontent.com/vladutmocanugabriel/qa_automation_project_setup/main/main.py
+curl -O https://raw.githubusercontent.com/vladutmocanugabriel/qa_automation_project_setup/main/project_setup_helpers.py
+curl -O https://raw.githubusercontent.com/vladutmocanugabriel/qa_automation_project_setup/main/files_setup_helpers.py
 
 # Run the tool
 python main.py my-test-project
@@ -148,3 +148,4 @@ npx playwright show-report
 ---
 
 Built with ❤️ for QA Engineers who want to get testing faster 🚀
+README made with GPT5.
