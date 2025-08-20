@@ -15,7 +15,12 @@ def main():
     project_root = ensure_root(project_name, dry_run)
     init_node_project(project_root, dry_run)
     create_folders(project_root, dry_run)
-    create_files(project_root, dry_run, force)
+
+
+
+    create_files_from_templates(project_root, dry_run, force, context={"project_name": project_name})
+
+
 
     print("\n🚀 Done! Your Playwright testing project is ready.")
     if dry_run:
