@@ -1,5 +1,6 @@
 import sys
 import subprocess
+import platform
 from pathlib import Path
 import shutil
 
@@ -29,13 +30,16 @@ def read_cli_args(args):
     return project_name, force, dry, path
 
 
-
-
+def resolve_cmd(name):
+    return f"{name}.cmd" if platform.system() == "Windows" else name
 
 def check_prerequisites():
+    node_cmd = resolve_cmd("node")
+    npm_cmd = resolve_cmd("npm")
+
     try:
         node_check = subprocess.run(
-            ["node", "--version"], capture_output=True, text=True, check=True
+            [node_cmd, "--version"], capture_output=True, text=True, check=True
         )
         node_check_result = node_check.stdout.strip()
         major = int(node_check_result.lstrip("v").split(".")[0])
@@ -44,17 +48,17 @@ def check_prerequisites():
             sys.exit(1)
         print("✅ Checked Node.js...")
     except FileNotFoundError:
-        print("❌ Node.js not found. Install Node 18+.")
+        print("❌ Node.js not found. Make sure it is in your PATH.")
         sys.exit(1)
     except subprocess.CalledProcessError:
         print("❌ Node.js found but failed to run. Reinstall Node.")
         sys.exit(1)
 
     try:
-        subprocess.run(["npm", "--version"], capture_output=True, text=True, check=True)
+        subprocess.run([npm_cmd, "--version"], capture_output=True, text=True, check=True)
         print("✅ Checked npm...")
     except FileNotFoundError:
-        print("❌ npm not found. Install npm.")
+        print("❌ npm not found. Make sure it is in your PATH.")
         sys.exit(1)
     except subprocess.CalledProcessError:
         print("❌ npm found but failed to run. Reinstall npm.")

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='qa-project-gen',
-    version='0.1.0',
+    version='0.1.3',
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     packages=find_packages(),
@@ -15,7 +15,12 @@ setup(
             'qa-gen = qa_project_gen.main:main',
         ],
     },
-    package_data={
-        'qa_project_gen': ['templates/**/*.j2'],
-    },
+        package_data={
+            'qa_project_gen': [
+                'templates/*.j2',
+                'templates/*/*.j2',
+                'templates/*/*/*.j2',
+                'templates/*/*/*/*.j2',
+            ]
+}
 )

@@ -1,5 +1,3 @@
 [build-system]
 requires = ["setuptools"]
-description = "A CLI tool that scaffolds a full Playwright automation project with best practices."
-readme = "README.md"
 build-backend = "setuptools.build_meta"
