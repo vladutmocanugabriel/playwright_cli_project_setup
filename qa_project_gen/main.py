@@ -1,18 +1,18 @@
-from project_setup_helpers import *
-from files_setup_helpers import *
+from .project_setup_helpers import *
+from .files_setup_helpers import *
 from pathlib import Path
 import sys
 
 def main():
-    project_name, force, dry_run = read_cli_args(sys.argv[1:])
-    project_root = Path(project_name)
+    project_name, force, dry_run, custom_path = read_cli_args(sys.argv[1:])
+    project_root = Path(custom_path) / project_name
 
     if "--clean" in sys.argv[1:]:
         remove_node_project(project_root, dry_run)
         return
 
     check_prerequisites()
-    project_root = ensure_root(project_name, dry_run)
+    project_root = ensure_root(project_root, dry_run)
     init_node_project(project_root, dry_run)
     create_folders(project_root, dry_run)
 

@@ -6,22 +6,30 @@ import shutil
 
 def read_cli_args(args):
     if not args:
-        print(
-            "The project name is missing. Please run the script again and provide a project name."
-        )
+        print("❌ Project name is missing. Usage: qa-gen <project-name> [--force] [--dry-run] [--path <destination>]")
         sys.exit(2)
 
     project_name = args[0]
     force = False
     dry = False
+    path = "."  # Default path is current working dir
 
-    for arg in args[1:]:
-        if arg == "--force":
+    i = 1
+    while i < len(args):
+        if args[i] == "--force":
             force = True
-        if arg == "--dry-run":
+        elif args[i] == "--dry-run":
             dry = True
-    print(f"The project name is: {project_name} and has force flag: {force} and dry-run flag: {dry}")
-    return project_name, force, dry
+        elif args[i] == "--path" and i + 1 < len(args):
+            path = args[i + 1]
+            i += 1  # Skip the path value on next loop
+        i += 1
+
+    print(f"Project: {project_name} | Force: {force} | Dry-run: {dry} | Path: {path}")
+    return project_name, force, dry, path
+
+
+
 
 
 def check_prerequisites():
