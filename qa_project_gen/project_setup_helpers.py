@@ -12,7 +12,7 @@ def read_cli_args(args):
     project_name = args[0]
     force = False
     dry = False
-    path = "."  # Default path is current working dir
+    path = "."
 
     i = 1
     while i < len(args):
@@ -22,7 +22,7 @@ def read_cli_args(args):
             dry = True
         elif args[i] == "--path" and i + 1 < len(args):
             path = args[i + 1]
-            i += 1  # Skip the path value on next loop
+            i += 1
         i += 1
 
     print(f"Project: {project_name} | Force: {force} | Dry-run: {dry} | Path: {path}")

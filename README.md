@@ -10,6 +10,8 @@ A Python CLI tool that quickly scaffolds a complete Playwright test automation p
 - **Test Data**: Faker.js integration for dynamic test data
 - **TypeScript**: Full TypeScript support with proper configuration
 - **Best Practices**: Includes fixtures, utilities, and Page Object Models
+- **Custom Location**: Use `--path` to specify where to generate your project
+- **Safe Execution**: Preview changes with `--dry-run` or force overwrites with `--force`
 
 ## Prerequisites
 
@@ -19,30 +21,25 @@ A Python CLI tool that quickly scaffolds a complete Playwright test automation p
 
 ## Installation & Usage
 
-### Option 1: Clone and Run Locally
+### Option 1: Install via pip (Coming Soon)
+
+```bash
+pip install qa-gen
+qa-gen my-project
+```
+
+### Option 2: Clone and Run Locally
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/yourusername/qa_automation_project_setup.git
 cd qa_automation_project_setup
 
-# Create a new Playwright project
+# Run the CLI tool
 python main.py my-test-project
 
 # With options
-python main.py my-test-project --force --dry-run
-```
-
-### Option 2: Download and Run
-
-```bash
-# Download the files
-curl -O https://raw.githubusercontent.com/vladutmocanugabriel/qa_automation_project_setup/main/main.py
-curl -O https://raw.githubusercontent.com/vladutmocanugabriel/qa_automation_project_setup/main/project_setup_helpers.py
-curl -O https://raw.githubusercontent.com/vladutmocanugabriel/qa_automation_project_setup/main/files_setup_helpers.py
-
-# Run the tool
-python main.py my-test-project
+python main.py my-test-project --force --dry-run --path /your/target/path
 ```
 
 ## Command Options
@@ -51,32 +48,36 @@ python main.py my-test-project
 python main.py <project-name> [options]
 
 Options:
-  --force      Overwrite existing files
-  --dry-run    Preview what would be created without making changes
-  --clean      Remove all generated files from a project
+  --force        Overwrite existing files
+  --dry-run      Preview what would be created without making changes
+  --clean        Remove generated files from a project
+  --path <dir>   Choose custom path to generate the project
 ```
 
 ## Examples
 
 ```bash
 # Create a new project
-python main.py awesome-qa-project
+qa-gen new-playwright-tests
 
-# Preview what will be created
-python main.py test-project --dry-run
+# Use a custom location
+qa-gen test-project --path /home/user/projects
 
-# Overwrite existing files
-python main.py existing-project --force
+# Preview without creating anything
+qa-gen project-name --dry-run
 
-# Clean up a project
-python main.py old-project --clean
+# Overwrite an existing project
+qa-gen my-existing-project --force
+
+# Clean an existing project
+qa-gen outdated-project --path /home/user/old_projects --clean
 ```
 
 ## Generated Project Structure
 
 ```
 my-test-project/
-├── playwright.config.ts          # Playwright configuration
+├── playwright.config.ts           # Playwright configuration
 ├── tsconfig.json                  # TypeScript configuration
 ├── package.json                   # Node.js dependencies
 ├── .gitignore                     # Git ignore patterns
@@ -95,17 +96,15 @@ my-test-project/
 
 ## What Gets Installed
 
-The tool automatically installs these npm packages:
+The CLI automatically installs the following npm packages:
 - `playwright` - Browser automation framework
 - `@playwright/test` - Test runner and assertions
 - `typescript` - TypeScript support
-- `ts-node` - TypeScript execution
-- `@faker-js/faker` - Dynamic test data generation
-- `dotenv` - Environment variable support
+- `ts-node` - Run TS files directly
+- `@faker-js/faker` - Realistic test data
+- `dotenv` - Environment variables
 
-## Getting Started with Your New Project
-
-After running the tool:
+## Running Tests in Your New Project
 
 ```bash
 cd my-test-project
@@ -113,39 +112,18 @@ cd my-test-project
 # Run all tests
 npx playwright test
 
-# Run specific test suites
+# Run tests in a folder
 npx playwright test tests/front_end
-npx playwright test tests/back_end
 
-# Run in headed mode (see browser)
+# Run with browser UI
 npx playwright test --headed
 
-# Generate test report
+# View the test report
 npx playwright show-report
 ```
 
-## Key Features of Generated Projects
-
-### Test ID Strategy
-- Uses `data-e2e` attributes for reliable element selection
-- Pre-configured in Playwright config
-
-### Page Object Model Pattern
-- Clear separation of locators and actions
-- Organized by features for scalability
-
-### Dynamic Test Data
-- Faker.js integration for realistic test data
-- Predefined user roles and data structures
-
-### Authentication Support
-- Fixtures for handling auth tokens
-- Environment variable support
-
-### Multi-browser Testing
-- Parallel execution across browsers
-
 ---
 
-Built with ❤️ for QA Engineers who want to get testing faster 🚀
-README made with GPT5.
+Built with ❤️ to help QA Engineers move faster and write better tests.
+
+README generated with GPT-4.
