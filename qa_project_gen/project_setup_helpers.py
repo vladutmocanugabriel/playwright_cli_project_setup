@@ -1,6 +1,6 @@
 import sys
 import subprocess
-import platform
+import os
 from pathlib import Path
 import shutil
 
@@ -30,8 +30,13 @@ def read_cli_args(args):
     return project_name, force, dry, path
 
 
-def resolve_cmd(name):
-    return f"{name}.cmd" if platform.system() == "Windows" else name
+def resolve_cmd(cmd_name):
+    path = shutil.which(cmd_name)
+    if path is None:
+        print(f"❌ '{cmd_name}' is not found in your PATH.")
+        print(f"🔍 Current PATH: {os.environ.get('PATH')}")
+        sys.exit(1)
+    return path
 
 def check_prerequisites():
     node_cmd = resolve_cmd("node")
@@ -39,29 +44,37 @@ def check_prerequisites():
 
     try:
         node_check = subprocess.run(
-            [node_cmd, "--version"], capture_output=True, text=True, check=True
+            [node_cmd, "--version"],
+            capture_output=True,
+            text=True,
+            check=True,
+            env=os.environ.copy(),  # ✅ Use full shell env for WSL/NVM/Git Bash
         )
         node_check_result = node_check.stdout.strip()
         major = int(node_check_result.lstrip("v").split(".")[0])
         if major < 18:
             print("❌ Node.js 18+ required.")
             sys.exit(1)
-        print("✅ Checked Node.js...")
-    except FileNotFoundError:
-        print("❌ Node.js not found. Make sure it is in your PATH.")
-        sys.exit(1)
-    except subprocess.CalledProcessError:
-        print("❌ Node.js found but failed to run. Reinstall Node.")
+        print(f"✅ Checked Node.js: {node_check_result}")
+
+    except (FileNotFoundError, subprocess.CalledProcessError) as e:
+        print("❌ Failed to run Node.js command.")
+        print(str(e))
         sys.exit(1)
 
     try:
-        subprocess.run([npm_cmd, "--version"], capture_output=True, text=True, check=True)
-        print("✅ Checked npm...")
-    except FileNotFoundError:
-        print("❌ npm not found. Make sure it is in your PATH.")
-        sys.exit(1)
-    except subprocess.CalledProcessError:
-        print("❌ npm found but failed to run. Reinstall npm.")
+        npm_check = subprocess.run(
+            [npm_cmd, "--version"],
+            capture_output=True,
+            text=True,
+            check=True,
+            env=os.environ.copy(),
+        )
+        print(f"✅ Checked npm: {npm_check.stdout.strip()}")
+
+    except (FileNotFoundError, subprocess.CalledProcessError) as e:
+        print("❌ Failed to run npm command.")
+        print(str(e))
         sys.exit(1)
 
     return
