@@ -4,6 +4,8 @@ import os
 from pathlib import Path
 import shutil
 
+npm_cmd = None
+npx_cmd = None
 
 def read_cli_args(args):
     if not args:
@@ -39,16 +41,22 @@ def resolve_cmd(cmd_name):
     return path
 
 def check_prerequisites():
+    global npm_cmd, npx_cmd
     node_cmd = resolve_cmd("node")
     npm_cmd = resolve_cmd("npm")
+    npx_cmd = shutil.which("npx")
+    if npx_cmd is None:
+        print("❌ 'npx' not found.")
+        sys.exit(1)
 
     try:
+        print("Running command:", [node_cmd, "--version"])
         node_check = subprocess.run(
             [node_cmd, "--version"],
             capture_output=True,
             text=True,
             check=True,
-            env=os.environ.copy(),  # ✅ Use full shell env for WSL/NVM/Git Bash
+            env=os.environ.copy(),
         )
         node_check_result = node_check.stdout.strip()
         major = int(node_check_result.lstrip("v").split(".")[0])
@@ -63,6 +71,7 @@ def check_prerequisites():
         sys.exit(1)
 
     try:
+        print("Running command:", [npm_cmd, "--version"])
         npm_check = subprocess.run(
             [npm_cmd, "--version"],
             capture_output=True,
@@ -77,8 +86,6 @@ def check_prerequisites():
         print(str(e))
         sys.exit(1)
 
-    return
-
 def create_folders(project_name, dry_run=False):
     base = Path(project_name)
     relative_paths = [
@@ -89,17 +96,13 @@ def create_folders(project_name, dry_run=False):
         "tests/support/utils",
     ]
 
-    if dry_run:
-        for path in relative_paths:
-            folder_path = base / path
+    for path in relative_paths:
+        folder_path = base / path
+        if dry_run:
             print(f"⚙️ [DRY RUN] would create: < {folder_path} >")
-        return
-    else:
-        for path in relative_paths:
-            folder_path = base / path
+        else:
             folder_path.mkdir(parents=True, exist_ok=True)
             print(f"📥 Created: < {folder_path} >")
-        return
 
 def ensure_root(project_name, dry_run=False):
     base = Path(project_name)
@@ -115,6 +118,7 @@ def ensure_root(project_name, dry_run=False):
 
 
 def init_node_project(project_root, dry_run=False):
+    global npm_cmd, npx_cmd
     project_root = Path(project_root)
     if dry_run:
         print("⚙️ [DRY RUN] Would run: npm init -y")
@@ -123,66 +127,46 @@ def init_node_project(project_root, dry_run=False):
             print("⚙️ [DRY RUN] Would run: npx playwright install --with-deps")
         else:
             print("⚙️ [DRY RUN] Would run: npx playwright install")
-    else:
-        try:
-            subprocess.run(["npm", "init", "-y"], cwd=project_root, check=True)
-            print("✅ Node.js project initialized.")
-        
-        except FileNotFoundError as e:
-            print(f"❌ Error: {e}")
-            sys.exit(1)
-        except subprocess.CalledProcessError as e:
-            print(f"❌ Error: {e.stderr}")
-            sys.exit(1)
+        return
 
-        try:
-            subprocess.run(["npm", "install", "-D", "@faker-js/faker"], cwd=project_root, check=True)
-            print("✅ Faker.JS installed and ready to use.")
-        
-        except FileNotFoundError as e:
-            print(f"❌ Error: {e}")
-            sys.exit(1)
-        except subprocess.CalledProcessError as e:
-            print(f"❌ Error: {e.stderr}")
-            sys.exit(1)
+    try:
+        subprocess.run([npm_cmd, "init", "-y"], cwd=project_root, check=True)
+        print("✅ Node.js project initialized.")
+    except Exception as e:
+        print(f"❌ Error initializing node project: {e}")
+        sys.exit(1)
 
-        try:
-            subprocess.run(["npm", "install", "dotenv"], cwd=project_root, check=True)
-            print("✅ DOTENV installed and ready to use.")
-        
-        except FileNotFoundError as e:
-            print(f"❌ Error: {e}")
-            sys.exit(1)
-        except subprocess.CalledProcessError as e:
-            print(f"❌ Error: {e.stderr}")
-            sys.exit(1)
+    try:
+        subprocess.run([npm_cmd, "install", "-D", "@faker-js/faker"], cwd=project_root, check=True)
+        print("✅ Faker.JS installed and ready to use.")
+    except Exception as e:
+        print(f"❌ Error installing faker: {e}")
+        sys.exit(1)
 
-        try:
-            subprocess.run(["npm", "install", "-D", "playwright", "@playwright/test", "typescript", "ts-node"], cwd=project_root, check=True)
-            print("✅ Playwright is now installed.")
+    try:
+        subprocess.run([npm_cmd, "install", "dotenv"], cwd=project_root, check=True)
+        print("✅ DOTENV installed and ready to use.")
+    except Exception as e:
+        print(f"❌ Error installing dotenv: {e}")
+        sys.exit(1)
 
-        except FileNotFoundError as e:
-            print(f"❌ Error: {e}")
-            sys.exit(1)
-        except subprocess.CalledProcessError as e:
-            print(f"❌ Error: {e.stderr}")
-            sys.exit(1)
+    try:
+        subprocess.run([npm_cmd, "install", "-D", "playwright", "@playwright/test", "typescript", "ts-node"], cwd=project_root, check=True)
+        print("✅ Playwright is now installed.")
+    except Exception as e:
+        print(f"❌ Error installing Playwright: {e}")
+        sys.exit(1)
 
-        try:
-            if sys.platform.startswith("linux"):
-                subprocess.run(["npx", "playwright", "install", "--with-deps"], cwd=project_root, check=True)
-                print("✅ Playwright system deps + browsers installed.")
-            else:
-                subprocess.run(["npx", "playwright", "install"], cwd=project_root, check=True)
-                print("✅ Playwright browsers are now installed.")
+    try:
+        if sys.platform.startswith("linux"):
+            subprocess.run([npx_cmd, "playwright", "install", "--with-deps"], cwd=project_root, check=True)
+        else:
+            subprocess.run([npx_cmd, "playwright", "install"], cwd=project_root, check=True)
+        print("✅ Playwright browsers installed.")
+    except Exception as e:
+        print(f"❌ Error installing Playwright browsers: {e}")
+        sys.exit(1)
 
-        except FileNotFoundError as e:
-            print(f"❌ Error: {e}")
-            sys.exit(1)
-        except subprocess.CalledProcessError as e:
-            print(f"❌ Error: {e.stderr}")
-            sys.exit(1)
-    
 def remove_node_project(project_root, dry_run=False):
     project_root = Path(project_root)
 
@@ -209,9 +193,3 @@ def remove_node_project(project_root, dry_run=False):
                 print(f"🗑️ Removed file: {target}")
             else:
                 print(f"ℹ️ Nothing to remove at: {target}")
-
-        
-
-
-
-
