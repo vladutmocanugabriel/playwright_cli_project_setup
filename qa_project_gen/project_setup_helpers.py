@@ -178,7 +178,8 @@ def remove_node_project(project_root, dry_run=False):
         project_root / "playwright.config.ts",
         project_root / "tests",
         project_root / ".gitignore",
-        project_root / "README.md"
+        project_root / "README.md",
+        project_root
     ]
 
     for target in targets:

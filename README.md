@@ -2,109 +2,125 @@
 
 A Python CLI tool that quickly scaffolds a complete Playwright test automation project with TypeScript, organized structure, and QA best practices.
 
-## Features
+## ✨ Features
 
-- **Quick Setup**: Creates a full Playwright project in seconds
-- **Organized Structure**: Separates E2E, frontend, backend tests with POM pattern
+- **Quick Setup**: Instantly bootstraps a full Playwright project
+- **Organized Structure**: Separates E2E, frontend, backend tests using POM
 - **Multi-browser**: Pre-configured for Chromium, Firefox, and WebKit
-- **Test Data**: Faker.js integration for dynamic test data
-- **TypeScript**: Full TypeScript support with proper configuration
-- **Best Practices**: Includes fixtures, utilities, and Page Object Models
-- **Custom Location**: Use `--path` to specify where to generate your project
-- **Safe Execution**: Preview changes with `--dry-run` or force overwrites with `--force`
+- **Dynamic Test Data**: Faker.js for realistic mock data
+- **TypeScript Ready**: Fully configured for TypeScript and TS-Node
+- **Fixtures & Utils**: Common helper structures and environment setup
+- **Custom Location**: Use `--path` to generate your project anywhere
+- **Safe Execution**: Preview with `--dry-run`, force overwrite with `--force`
 
-## Prerequisites
+---
 
-- Python 3.7+
-- Node.js 18+
-- npm
+## 🔧 Prerequisites
 
-## Installation & Usage
+Make sure the following are installed:
 
-### Option 1: Install via pip (Coming Soon)
+- **Python 3.7+**
+- **Node.js v18+**
+- **npm**
+- **[pipx](https://pypa.github.io/pipx/)**
+
+> Install pipx if missing:
 
 ```bash
-pip install qa-gen
-qa-gen my-project
+sudo apt install pipx
+pipx ensurepath
 ```
 
-### Option 2: Clone and Run Locally
+---
+
+## 🚀 Installation (Recommended via pipx)
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/qa_automation_project_setup.git
-cd qa_automation_project_setup
-
-# Run the CLI tool
-python main.py my-test-project
-
-# With options
-python main.py my-test-project --force --dry-run --path /your/target/path
+pipx install qa-project-gen
 ```
 
-## Command Options
+> Now you can run the CLI globally:
 
 ```bash
-python main.py <project-name> [options]
+qa-gen my-playwright-project
+```
+
+---
+
+## 🛠️ Command Options
+
+```bash
+qa-gen <project-name> [options]
 
 Options:
-  --force        Overwrite existing files
-  --dry-run      Preview what would be created without making changes
-  --clean        Remove generated files from a project
-  --path <dir>   Choose custom path to generate the project
+  --force        Overwrite existing files if they exist
+  --dry-run      Show what would be created without writing to disk
+  --clean        Remove generated folders and files from a project
+  --path <dir>   Set the folder where the project should be created
 ```
 
-## Examples
+---
+
+## 📌 Usage Examples
 
 ```bash
-# Create a new project
-qa-gen new-playwright-tests
+# Create a new Playwright project
+qa-gen my-test-project
 
-# Use a custom location
-qa-gen test-project --path /home/user/projects
+# Create at a specific location
+qa-gen my-project --path /home/user/qa-projects
 
-# Preview without creating anything
-qa-gen project-name --dry-run
+# Simulate project creation without making changes
+qa-gen temp-project --dry-run
 
-# Overwrite an existing project
-qa-gen my-existing-project --force
+# Overwrite files in an existing project folder
+qa-gen demo-project --force
 
-# Clean an existing project
-qa-gen outdated-project --path /home/user/old_projects --clean
+# Clean up an old project
+qa-gen demo-project --clean --path /home/user/old-projects
 ```
 
-## Generated Project Structure
+---
+
+## 📁 Generated Project Structure
 
 ```
 my-test-project/
 ├── playwright.config.ts           # Playwright configuration
 ├── tsconfig.json                  # TypeScript configuration
-├── package.json                   # Node.js dependencies
-├── .gitignore                     # Git ignore patterns
-├── README.md                      # Project documentation
+├── package.json                   # Node.js metadata
+├── .gitignore                     # Ignore rules
+├── README.md                      # Template documentation
 └── tests/
-    ├── e2e/                       # End-to-end tests
-    ├── front_end/feature_one/     # Frontend UI tests
-    ├── back_end/feature_one/      # Backend API tests
+    ├── e2e/                       # End-to-end specs
+    ├── front_end/feature_one/     # UI/FE tests
+    ├── back_end/feature_one/      # API/BE tests
     └── support/
         ├── POMs/feature_one/      # Page Object Models
-        └── utils/                 # Test utilities
-            ├── helpers.ts         # Common functions
-            ├── test-data.ts       # Test data with Faker.js
-            └── fixtures.ts        # Playwright fixtures
+        └── utils/                 # Shared test utilities
+            ├── helpers.ts
+            ├── test-data.ts
+            └── fixtures.ts
 ```
 
-## What Gets Installed
+---
 
-The CLI automatically installs the following npm packages:
-- `playwright` - Browser automation framework
-- `@playwright/test` - Test runner and assertions
-- `typescript` - TypeScript support
-- `ts-node` - Run TS files directly
-- `@faker-js/faker` - Realistic test data
-- `dotenv` - Environment variables
+## 📦 What Gets Installed (via npm)
 
-## Running Tests in Your New Project
+The CLI installs and configures:
+
+- `playwright` — Browser automation
+- `@playwright/test` — Test runner and assertion library
+- `typescript` — TypeScript language support
+- `ts-node` — TypeScript execution in Node
+- `@faker-js/faker` — Fake test data
+- `dotenv` — Environment variable support
+
+---
+
+## ✅ Running Tests
+
+Once your project is generated:
 
 ```bash
 cd my-test-project
@@ -112,18 +128,27 @@ cd my-test-project
 # Run all tests
 npx playwright test
 
-# Run tests in a folder
+# Run specific suite
 npx playwright test tests/front_end
 
 # Run with browser UI
 npx playwright test --headed
 
-# View the test report
+# View test results
 npx playwright show-report
 ```
 
 ---
 
-Built with ❤️ to help QA Engineers move faster and write better tests.
+## 🧠 Notes
 
-README generated with GPT-4.
+- If using Linux or WSL and `venv` is missing:
+  ```bash
+  sudo apt install python3-venv
+  ```
+- If you’re in a restricted environment (like Debian or Ubuntu), use `pipx` instead of global `pip` to avoid permission issues.
+- Avoid `sudo pip install` to prevent breaking system packages.
+
+---
+
+Built with ❤️ to help QA Engineers get started faster and test better.

@@ -1,14 +1,28 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, request, APIResponse } from '@playwright/test';
 
-test('API test - POST login', async ({ request }) => {
-  const response = await request.post('https://reqres.in/api/login', {
-    data: {
-      email: 'eve.holt@reqres.in',
-      password: 'cityslicka'
-    }
+const BASE_URL = process.env.TARGET_BASE_URL ?? 'https://webamboos.com';
+
+test.describe('Webamboos backend smoke', () => {
+  test('GET / (homepage) returns 200 and looks like HTML', async ({ request }) => {
+    const res = await request.get("/", { failOnStatusCode: false });
+    expect(res.status(), 'homepage status').toBe(200);
+
+    const ctype = res.headers()['content-type'] ?? '';
+    expect(ctype.toLowerCase(), 'content-type should be HTML').toContain('text/html');
+
+    const body = await res.text();
+    expect(body).toMatch(/Webamboos|Trusted Software Development Partner/i);
   });
 
-  expect(response.status()).toBe(200);
-  const body = await response.json();
-  expect(body.token).toBeTruthy();
+  test('HEAD / has basic headers', async ({ request }) => {
+    const res = await request.fetch(`${BASE_URL}/`, { method: 'HEAD', failOnStatusCode: false });
+    expect(res.status(), 'HEAD / status').toBe(200);
+
+    const ctype = res.headers()['content-type'];
+    expect(ctype, 'content-type present').toBeTruthy();
+
+    const cache = res.headers()['cache-control'];
+    expect(cache, 'cache-control present').toBeTruthy();
+  });
+
 });

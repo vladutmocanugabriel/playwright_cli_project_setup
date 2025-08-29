@@ -1,24 +1,74 @@
-import { Page } from '@playwright/test';
+import { Page, Locator, expect } from 'playwright';
 
-export class LoginPage {
-  constructor(private page: Page) {}
+export class WebamboosHome {
+  public page: Page;
 
-  //////////  LOCATORS //////////
-
-  getPageTitle = () => this.page.locator('h2', { hasText: "Test TEXT" });
-  getForm = () => this.page.locator('form');
-
-  //////////  ACTIONS //////////
-
-  public async loginUser(email: string, password: string) {
-    await this.page.locator('#email').fill(email);
-    await this.page.locator('#password').fill(password);
-    await this.page.locator('#login').click();
-    await this.page.waitForLoadState('networkidle');
+  constructor(page: Page) {
+    this.page = page;
   }
 
-  public async gotToForgotPasswordPage() {
-    await this.page.locator('text=Forgot Password').click();
-    await this.page.waitForLoadState('networkidle');
+  // ======================
+  // LOCATORS
+  // ======================
+
+  getAnyTopNavLink = (name: string) => this.page.getByRole('link', { name: new RegExp(`^${name}$`, 'i') });
+  public async getTopNavLink(
+    name: 'Company' | 'Services' | 'Technologies' | 'Our work' | 'Blog' | 'Contact us'
+  ) {
+    return this.getAnyTopNavLink(name);
+  }
+
+  getHeroHeadline = () =>
+    this.page.getByRole('heading', { name: /Your Trusted Software\s+Development Partner/i });
+
+  getGetInTouchCTA = () => this.page.getByRole('link', { name: /^Get in touch$/i });
+  getContactUsCTA = () => this.page.getByRole('link', { name: /^Contact us$/i });
+
+  getTeamMembersStat = () =>
+    this.page.getByRole('heading', { level: 4, name: /30\+\s*team members/i });
+  getProjectsStat = () =>
+    this.page.getByRole('heading', { level: 4, name: /80\+\s*projects/i });
+
+  getOurWorkHeading = () => this.page.getByRole('heading', { name: /^Our work$/i });
+  getFAQHeading = () =>
+    this.page.getByRole('heading', { name: /(FAQ|You have questions, we have answers)/i });
+
+  getFirstProjectCardLink = () =>
+    this.page.getByRole('region', { name: /Our work/i }).getByRole('link').first();
+
+  getAnyIndustryCard = (name: string) =>
+    this.page.getByRole('heading', { name: new RegExp(`^${name}$`, 'i') });
+  public async getIndustryCard(
+    name:
+      | 'Logistics'
+      | 'EdTech'
+      | 'FinTech'
+      | 'MedTech'
+      | 'Warehouse'
+      | 'Manufacturing'
+      | 'Food & Beverages'
+  ) {
+    return this.getAnyIndustryCard(name);
+  }
+
+  // ======================
+  // ACTIONS
+  // ======================
+
+  async goto() {
+    await this.page.goto("/");
+  }
+
+  async openContact() {
+    await this.getContactUsCTA().first().click();
+  }
+
+  async clickHeroCta() {
+    await this.getGetInTouchCTA().first().click();
+  }
+
+  async openFirstProjectFromOurWork() {
+    await this.getOurWorkHeading().scrollIntoViewIfNeeded();
+    await this.getFirstProjectCardLink().click();
   }
 }
